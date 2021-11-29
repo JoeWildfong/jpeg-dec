@@ -8,8 +8,8 @@
 
 class JPEGStream : public std::ifstream {
     public:
-        const JPEGStream& getMarker();
-        const std::string& getHex();
+        const JPEGMarker&& getMarker();
+        const std::string&& getHex();
         const bool atMarker();
         void skipToMarker();
         

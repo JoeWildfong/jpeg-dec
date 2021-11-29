@@ -1,4 +1,5 @@
 #include <iostream>
+#include <memory>
 
 #include "stream.h"
 #include "skeleton.h"
@@ -18,14 +19,14 @@ int main() {
         return 1;
     }
     
-    JPEG::Skeleton* skeleton = new JPEG::Skeleton(inFile);
+    std::unique_ptr skeleton = make_unique<JPEG::Skeleton>(inFile);
 
     std::cout << "skeleton parsed, tags:" << std::endl;
     std::cout << skeleton->toString() << std::endl;
 
     HuffmanTables huffTables;
 
-    const std::vector<const std::streampos> DHTs = skeleton->getTags(JPEGMarkerByte::DHT);
+    const std::vector<std::streampos> DHTs = skeleton->getTags(JPEGMarkerByte::DHT);
     for (int i = 0; i < DHTs.size(); i++) {
         huffTables.addTable(inFile, DHTs[i]);
     }

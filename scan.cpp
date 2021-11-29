@@ -4,7 +4,7 @@
 
 JPEGScan::JPEGScan(JPEGStream& stream, const std::streampos offset) {
     stream.seekg(offset);
-    JPEGBitstream& bitstream {std::move(stream)};
+    JPEGBitstream&& bitstream {std::move(stream)};
     unsigned short length = bitstream.getWord();
     unsigned char numComponents = bitstream.getByte();
     for (int i = 0; i < numComponents; i++) {

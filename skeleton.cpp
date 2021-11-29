@@ -8,7 +8,7 @@ JPEG::Skeleton::Skeleton(JPEGStream& data) {
             if (data.eof()) {
                 break;
             }
-            JPEGMarker marker = data.getMarker();
+            const JPEGMarker marker = data.getMarker();
             tags[marker].push_back(data.tellg());
         } catch (const NotAMarkerException& err) {
             std::cout << "Expected marker at byte " << err.pos << ", got " << data.getHex() << std::endl;
@@ -17,11 +17,11 @@ JPEG::Skeleton::Skeleton(JPEGStream& data) {
     }
 }
 
-const std::vector<const std::streampos>& JPEG::Skeleton::getTags(JPEGMarkerByte byte) const {
+const std::vector<std::streampos>& JPEG::Skeleton::getTags(JPEGMarkerByte byte) const {
     return tags.at(JPEGMarker(byte));
 }
 
-const std::string& JPEG::Skeleton::toString() const {
+const std::string&& JPEG::Skeleton::toString() const {
     std::string out = "";
     for (auto tagType = tags.begin(); tagType != tags.end(); tagType++) {
         auto tagName = tagType->first.getName();
@@ -30,5 +30,5 @@ const std::string& JPEG::Skeleton::toString() const {
             out += tagName + " at offset " + std::to_string(*offset) + "\n";
         }
     }
-    return out;
+    return std::move(out);
 }

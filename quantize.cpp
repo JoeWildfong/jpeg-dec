@@ -3,7 +3,7 @@
 
 QuantizationTables::QuantizationTables(JPEGStream& stream, const std::streampos offset) {
     stream.seekg(offset);
-    JPEGBitstream& bitstream {std::move(stream)};
+    JPEGBitstream&& bitstream {std::move(stream)};
     tables.empty();
     defined.empty();
     unsigned short length = bitstream.getWord();
@@ -14,10 +14,10 @@ QuantizationTables::QuantizationTables(JPEGStream& stream, const std::streampos 
 
 void QuantizationTables::addTable(JPEGStream& stream, const std::streampos offset) {
     stream.seekg(offset);
-    JPEGBitstream& bitstream {std::move(stream)};
+    JPEGBitstream&& bitstream {std::move(stream)};
     unsigned char precision = bitstream.getNibble();
     unsigned char id = bitstream.getNibble();
-    QTable table {bitstream};
+    QTable table {bitstream, bitstream.tellg()};
     tables[id] = table;
     defined[id] = true;
 }

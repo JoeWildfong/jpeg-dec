@@ -4,7 +4,7 @@
 
 JPEGFrame::JPEGFrame(JPEGStream& data, std::streampos offset) {
     data.seekg(offset);
-    JPEGBitstream& stream {std::move(data)};
+    JPEGBitstream&& stream {std::move(data)};
     unsigned short length = stream.getWord();
     header.precision = stream.getByte();
     header.height = stream.getWord();

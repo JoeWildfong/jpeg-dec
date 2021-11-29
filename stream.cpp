@@ -1,18 +1,18 @@
 #include "stream.h"
 
-const JPEGMarker& JPEGStream::getMarker() {
+const JPEGMarker&& JPEGStream::getMarker() {
     const unsigned char ffbyte = this->get();
     if (ffbyte != 0xFF) {
         throw NotAMarkerException(this->tellg());
     }
     const unsigned char markerByte = this->get();
-    return JPEGMarker{markerByte};
+    return std::move(JPEGMarker{markerByte});
 }
 
-const std::string& JPEGStream::getHex() {
+const std::string&& JPEGStream::getHex() {
     char byteHex[2];
     sprintf(byteHex, "%x", this->get());
-    return std::string(byteHex);
+    return std::move(std::string(byteHex));
 }
 
 const bool JPEGStream::atMarker() {

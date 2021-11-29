@@ -6,7 +6,7 @@ HuffmanTables::HuffmanTables() : number(0) {}
 
 void HuffmanTables::addTable(JPEGStream& stream, std::streampos offset) {
     stream.seekg(offset);
-    JPEGBitstream& bitstream {std::move(stream)};
+    JPEGBitstream&& bitstream {std::move(stream)};
     int i, j;
     int len = bitstream.getWord();
     unsigned char tableId = bitstream.getByte();

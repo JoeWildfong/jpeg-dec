@@ -11,10 +11,10 @@ namespace JPEG {
 class Skeleton {
     public:
         Skeleton(JPEGStream& data);
-        const std::vector<const std::streampos>& getTags(const JPEGMarkerByte byte) const;
-        const std::string& toString() const;
+        const std::vector<std::streampos>& getTags(const JPEGMarkerByte byte) const;
+        const std::string&& toString() const;
     private:
-        std::map<const JPEGMarker, std::vector<const std::streampos>> tags;
+        std::map<const JPEGMarker, std::vector<std::streampos>> tags;
 };
 
 }

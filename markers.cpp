@@ -62,6 +62,19 @@ const bool JPEGMarker::isRecognizedMarkerByte(const unsigned char byte) {
     return markerByteToName.count(markerByte) > 0;
 }
 
+bool JPEGMarker::operator<(const JPEGMarker& other) const {
+    return this->getMarkerByte() < other.getMarkerByte();
+}
+
+bool JPEGMarker::operator=(const JPEGMarker& other) const {
+    return this->getMarkerByte() == other.getMarkerByte();
+}
+
+bool JPEGMarker::operator>(const JPEGMarker& other) const {
+    return this->getMarkerByte() > other.getMarkerByte();
+}
+
+
 UnknownMarkerException::UnknownMarkerException(unsigned char marker) :
     marker(marker)
     {};

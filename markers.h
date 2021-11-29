@@ -4,7 +4,7 @@
 #include <fstream>
 #include <exception>
 
-const enum JPEGMarkerByte {
+enum JPEGMarkerByte {
     SOI  = 0xD8,
     EOI  = 0xD9,
     SOF0 = 0xC0,
@@ -47,6 +47,9 @@ class JPEGMarker {
 
         const JPEGMarkerByte getMarkerByte() const;
         const std::string& getName() const;
+        bool operator<(const JPEGMarker& other) const;
+        bool operator=(const JPEGMarker& other) const;
+        bool operator>(const JPEGMarker& other) const;
 
         static const bool isRecognizedMarkerByte(const unsigned char byte);
     private:
