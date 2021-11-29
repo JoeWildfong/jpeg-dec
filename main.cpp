@@ -1,7 +1,8 @@
 #include <iostream>
-#include <fstream>
 
-#include "parse.h"
+#include "stream.h"
+#include "skeleton.h"
+#include "markers.h"
 #include "huffman.h"
 #include "quantize.h"
 #include "frame.h"
@@ -10,43 +11,43 @@
 using namespace std;
 
 int main() {
-  std::ifstream inFile;
-  inFile.open("input.jpg", ios::binary);
-  if (!inFile.is_open()) {
-    cout << "Unable to open input.jpg" << endl;
-    return 1;
-  }
-  
-  JPEGParse* head = new JPEGParse(inFile);
+    JPEGStream inFile;
+    inFile.open("input.jpg", ios::binary);
+    if (!inFile.is_open()) {
+        cout << "Unable to open input.jpg" << endl;
+        return 1;
+    }
+    
+    JPEG::Skeleton* skeleton = new JPEG::Skeleton(inFile);
 
-  std::cout << "header parsed, tags:" << std::endl;
-  std::cout << head->toString() << std::endl;
+    std::cout << "skeleton parsed, tags:" << std::endl;
+    std::cout << skeleton->toString() << std::endl;
 
-  HuffmanTables huffTables;
+    HuffmanTables huffTables;
 
-  std::vector<std::string> DHTs = head->getTags("DHT");
-  for (int i = 0; i < DHTs.size(); i++) {
-    huffTables.addTable(DHTs[i]);
-  }
-  for (int i = 0; i < 4; i++) {
-    std::cout << "dc table " << i << ": length " << huffTables.dcTables[i].size() << std::endl;
-  }
-  for (int i = 0; i < 4; i++) {
-    std::cout << "ac table " << i << ": length " << huffTables.acTables[i].size() << std::endl;
-  }
+    const std::vector<const std::streampos> DHTs = skeleton->getTags(JPEGMarkerByte::DHT);
+    for (int i = 0; i < DHTs.size(); i++) {
+        huffTables.addTable(inFile, DHTs[i]);
+    }
+    for (int i = 0; i < 4; i++) {
+        std::cout << "dc table " << i << ": length " << huffTables.dcTables[i].size() << std::endl;
+    }
+    for (int i = 0; i < 4; i++) {
+        std::cout << "ac table " << i << ": length " << huffTables.acTables[i].size() << std::endl;
+    }
 
-  QuantizationTables qtables {head->getTags("DQT")[0]};
-  for (int i = 0; i < 4; i++) {
-    std::cout << "qtable " << i <<": " << (qtables.defined[i]? "defined":"undefined") << std::endl;
-  }
+    QuantizationTables qtables {inFile, skeleton->getTags(JPEGMarkerByte::DQT)[0]};
+    for (int i = 0; i < 4; i++) {
+        std::cout << "qtable " << i <<": " << (qtables.defined[i]? "defined":"undefined") << std::endl;
+    }
 
-  JPEGFrame frame {head->getTags("SOF0")[0]};
-  std::cout << "dimensions: " << frame.header.width << "x" << frame.header.height << std::endl;
+    JPEGFrame frame {inFile, skeleton->getTags(JPEGMarkerByte::SOF0)[0]};
+    std::cout << "dimensions: " << frame.header.width << "x" << frame.header.height << std::endl;
 
-  JPEGScan scan {head->getTags("SOS")[0]};
-  for (int i = 0; i < scan.components.size(); i++) {
-    std::cout << "component " << i << ": sampling " << int(frame.components[i].h_sampling) << "x" << int(frame.components[i].v_sampling) << ", qtable " << int(frame.components[i].q_table) << ", dcTable " << int(scan.components[i].dcTable) << ", acTable " << int(scan.components[i].acTable) << std::endl;
-  }
+    JPEGScan scan {inFile, skeleton->getTags(JPEGMarkerByte::SOS)[0]};
+    for (int i = 0; i < scan.components.size(); i++) {
+        std::cout << "component " << i << ": sampling " << int(frame.components[i].h_sampling) << "x" << int(frame.components[i].v_sampling) << ", qtable " << int(frame.components[i].q_table) << ", dcTable " << int(scan.components[i].dcTable) << ", acTable " << int(scan.components[i].acTable) << std::endl;
+    }
 
-  inFile.close();
+    inFile.close();
 }

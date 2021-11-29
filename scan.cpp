@@ -2,19 +2,20 @@
 #include "bitstream.h"
 #include <iostream>
 
-JPEGScan::JPEGScan(std::string& data) {
-  Bitstream stream {data};
-  unsigned short length = stream.readWord();
-  unsigned char numComponents = stream.readByte();
-  for (int i = 0; i < numComponents; i++) {
-    unsigned char id = stream.readByte();
-    ScanComponent c;
-    c.dcTable = stream.readNibble();
-    c.acTable = stream.readNibble();
-    components.push_back(c);
-  }
-  ss = stream.readByte();
-  se = stream.readByte();
-  ah = stream.readNibble();
-  al = stream.readNibble();
+JPEGScan::JPEGScan(JPEGStream& stream, const std::streampos offset) {
+    stream.seekg(offset);
+    JPEGBitstream& bitstream {std::move(stream)};
+    unsigned short length = bitstream.getWord();
+    unsigned char numComponents = bitstream.getByte();
+    for (int i = 0; i < numComponents; i++) {
+        unsigned char id = bitstream.getByte();
+        ScanComponent c;
+        c.dcTable = bitstream.getNibble();
+        c.acTable = bitstream.getNibble();
+        components.push_back(c);
+    }
+    ss = bitstream.getByte();
+    se = bitstream.getByte();
+    ah = bitstream.getNibble();
+    al = bitstream.getNibble();
 }

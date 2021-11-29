@@ -1,25 +1,23 @@
 #include "quantize.h"
 #include <iostream>
 
-QuantizationTables::QuantizationTables(std::string& raw) : QuantizationTables(new Bitstream(raw)) {}
-
-QuantizationTables::QuantizationTables(Bitstream* stream) {
-  tables.empty();
-  defined.empty();
-  unsigned short length = stream->readWord();
-  while (stream->remaining() > 0) {
-    addTable(stream);
-  }
+QuantizationTables::QuantizationTables(JPEGStream& stream, const std::streampos offset) {
+    stream.seekg(offset);
+    JPEGBitstream& bitstream {std::move(stream)};
+    tables.empty();
+    defined.empty();
+    unsigned short length = bitstream.getWord();
+    while (!bitstream.atMarker()) {
+        addTable(bitstream, bitstream.tellg());
+    }
 }
 
-void QuantizationTables::addTable(std::string& raw) {
-  addTable(new Bitstream(raw));
-}
-
-void QuantizationTables::addTable(Bitstream* stream) {
-  unsigned char precision = stream->readNibble();
-  unsigned char id = stream->readNibble();
-  QTable table {stream};
-  tables[id] = table;
-  defined[id] = true;
+void QuantizationTables::addTable(JPEGStream& stream, const std::streampos offset) {
+    stream.seekg(offset);
+    JPEGBitstream& bitstream {std::move(stream)};
+    unsigned char precision = bitstream.getNibble();
+    unsigned char id = bitstream.getNibble();
+    QTable table {bitstream};
+    tables[id] = table;
+    defined[id] = true;
 }

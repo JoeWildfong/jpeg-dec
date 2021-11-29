@@ -1,53 +1,42 @@
 #include "bitstream.h"
 
-Bitstream::Bitstream(std::string& source) {
-  m_source = source;
-  m_bufsize = 0;
-  m_buf = 0;
-  m_index = 0;
-  eof = false;
-  length = source.size();
+unsigned short JPEGBitstream::getBits(int len) {
+    unsigned short output;
+    readIntoBuffer(len);
+
+    // Shift the requested number of bytes down to the other end
+    output = ((m_buf >> (32 - len)) & ((1 << len) - 1));
+
+    m_bufsize -= len;
+    m_buf <<= len;
+    return output;
 }
 
-unsigned short Bitstream::readBits(int len) {
-  unsigned short output;
-  readIntoBuffer(len);
-
-  // Shift the requested number of bytes down to the other end
-  output = ((m_buf >> (32 - len)) & ((1 << len) - 1));
-
-  m_bufsize -= len;
-  m_buf <<= len;
-  return output;
+unsigned char JPEGBitstream::getNibble() {
+    return static_cast<unsigned char>(getBits(4));
 }
 
-unsigned char Bitstream::readNibble() {
-  return static_cast<unsigned char>(readBits(4));
+unsigned char JPEGBitstream::getByte() {
+    return static_cast<unsigned char>(getBits(8));
 }
 
-unsigned char Bitstream::readByte() {
-  return static_cast<unsigned char>(readBits(8));
+unsigned char JPEGBitstream::get() {
+    return this->getByte();
 }
 
-unsigned short Bitstream::readWord() {
-  return readBits(16);
+unsigned short JPEGBitstream::getWord() {
+    return getBits(16);
 }
 
-unsigned int Bitstream::remaining() {
-  return length - m_index;
-}
-
-void Bitstream::readIntoBuffer(int len) {
-  while (len > m_bufsize) {
-    // Read a byte in, shift it up to join the queue
-    unsigned char readByte = 0;
-    if (m_index < m_source.size()){
-      readByte = m_source[m_index];
-      m_index++;
-    } else {
-      eof = true;
+void JPEGBitstream::readIntoBuffer(int len) {
+    while (len > m_bufsize) {
+        // Read a byte in, shift it up to join the queue
+        unsigned char readByte = 0;
+        if (!this->eof()) {
+            readByte = this->get();
+        }
+        m_buf = m_buf | (readByte << (24 - m_bufsize));
+        m_bufsize += 8;
     }
-    m_buf = m_buf | (readByte << (24 - m_bufsize));
-    m_bufsize += 8;
-  }
 }
+

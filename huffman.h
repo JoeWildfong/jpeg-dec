@@ -1,18 +1,17 @@
 #pragma once
 
-#include <array>
-#include <utility>
 #include <map>
-#include <string>
+
+#include "stream.h"
 
 class HuffmanTables {
-  public:
-    HuffmanTables();
-    void addTable(std::string data);
-    unsigned char number;
-    typedef std::pair<int, unsigned int> huffKey;
-    typedef std::map<huffKey, unsigned char> huffTable;
-    huffTable dcTables[4];
-    huffTable acTables[4];
-    huffTable* getTable(unsigned char byteId);
+    public:
+        HuffmanTables();
+        void addTable(JPEGStream& stream, std::streampos offset);
+        unsigned char number;
+        typedef std::pair<int, unsigned int> HuffmanKey;
+        typedef std::map<HuffmanKey, unsigned char> HuffmanTable;
+        HuffmanTable dcTables[4];
+        HuffmanTable acTables[4];
+        HuffmanTable& getTable(unsigned char byteId);
 };

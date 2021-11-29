@@ -1,21 +1,28 @@
 #pragma once
 
-#include <string>
+#include "stream.h"
 
-class Bitstream {
-  public:
-    Bitstream(std::string& source);
-    unsigned short readBits(int len);
-    unsigned char readNibble();
-    unsigned char readByte();
-    unsigned short readWord();
-    unsigned int length;
-    bool eof;
-    unsigned int remaining();
-  private:
-    void readIntoBuffer(int len);
-    std::string m_source;
-    unsigned int m_buf;
-    unsigned short m_bufsize;
-    unsigned int m_index;
+class JPEGBitstream : public JPEGStream {
+    public:
+        unsigned short getBits(int len);
+        unsigned char getNibble();
+        unsigned char getByte();
+        unsigned char get();
+        unsigned short getWord();
+
+        using JPEGStream::JPEGStream;
+        JPEGBitstream(std::ifstream&& stream) : JPEGStream(std::move(stream)) {};
+
+        ~JPEGBitstream() = default;
+
+        JPEGBitstream(const JPEGBitstream& copy) = default;
+        JPEGBitstream(JPEGBitstream&& move) = default;
+        
+        JPEGBitstream& operator=(const JPEGBitstream& copy) = default;
+        JPEGBitstream& operator=(JPEGBitstream&& move) = default;
+    private:
+        void readIntoBuffer(int len);
+        unsigned int m_buf = 0;
+        unsigned short m_bufsize = 0;
+        unsigned int m_index = 0;
 };
