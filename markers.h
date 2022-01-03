@@ -1,6 +1,6 @@
 #pragma once
 
-#include <string>
+#include <string_view>
 #include <fstream>
 #include <exception>
 
@@ -46,15 +46,15 @@ class JPEGMarker {
         JPEGMarker(JPEGMarkerByte byte);
 
         const JPEGMarkerByte getMarkerByte() const;
-        const std::string& getName() const;
+        const std::string_view getName() const;
         bool operator<(const JPEGMarker& other) const;
-        bool operator=(const JPEGMarker& other) const;
+        bool operator==(const JPEGMarker& other) const;
         bool operator>(const JPEGMarker& other) const;
 
         static const bool isRecognizedMarkerByte(const unsigned char byte);
     private:
         const JPEGMarkerByte m_byte;
-        const std::string m_name;
+        const std::string_view m_name;
 };
 
 class UnknownMarkerException : std::exception {

@@ -1,15 +1,21 @@
 #pragma once
 
 #include <fstream>
-#include <string>
+#include <string_view>
 #include <exception>
+#include <tuple>
 
+#include "types.h"
 #include "markers.h"
 
 class JPEGStream : public std::ifstream {
     public:
-        const JPEGMarker&& getMarker();
-        const std::string&& getHex();
+        const std::pair<nybble, nybble> getNybblePair();
+        const byte getByte();
+        const word getWord();
+        const doubleword getDoubleWord();
+        const JPEGMarker getMarker();
+        const std::string_view getHex();
         const bool atMarker();
         void skipToMarker();
         

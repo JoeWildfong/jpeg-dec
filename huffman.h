@@ -1,6 +1,7 @@
 #pragma once
 
 #include <map>
+#include <array>
 
 #include "stream.h"
 
@@ -8,10 +9,10 @@ class HuffmanTables {
     public:
         HuffmanTables();
         void addTable(JPEGStream& stream, std::streampos offset);
-        unsigned char number;
-        typedef std::pair<int, unsigned int> HuffmanKey;
-        typedef std::map<HuffmanKey, unsigned char> HuffmanTable;
-        HuffmanTable dcTables[4];
-        HuffmanTable acTables[4];
-        HuffmanTable& getTable(unsigned char byteId);
+        byte number;
+        typedef std::pair<unsigned short, unsigned int> HuffmanKey;
+        typedef std::map<HuffmanKey, byte> HuffmanTable;
+        std::array<HuffmanTable, 4> dcTables;
+        std::array<HuffmanTable, 4> acTables;
+        HuffmanTable& getTable(byte byteId);
 };

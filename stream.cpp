@@ -1,6 +1,23 @@
 #include "stream.h"
 
-const JPEGMarker&& JPEGStream::getMarker() {
+const std::pair<nybble, nybble> JPEGStream::getNybblePair() {
+    unsigned char read = this->get();
+    return {(read >> 4) & 0x0F, read & 0x0F};
+}
+
+const byte JPEGStream::getByte() {
+    return this->get();
+}
+
+const word JPEGStream::getWord() {
+    return (this->get() << 8) + this->get();
+}
+
+const doubleword JPEGStream::getDoubleWord() {
+    return (this->get() << 24) + (this->get() << 16) + (this->get() << 8) + this->get();
+}
+
+const JPEGMarker JPEGStream::getMarker() {
     const unsigned char ffbyte = this->get();
     if (ffbyte != 0xFF) {
         throw NotAMarkerException(this->tellg());
@@ -9,10 +26,10 @@ const JPEGMarker&& JPEGStream::getMarker() {
     return std::move(JPEGMarker{markerByte});
 }
 
-const std::string&& JPEGStream::getHex() {
+const std::string_view JPEGStream::getHex() {
     char byteHex[2];
     sprintf(byteHex, "%x", this->get());
-    return std::move(std::string(byteHex));
+    return std::string_view(byteHex);
 }
 
 const bool JPEGStream::atMarker() {
@@ -30,8 +47,12 @@ const bool JPEGStream::atMarker() {
 }
 
 void JPEGStream::skipToMarker() {
-    while (!this->atMarker() && !this->eof()) {
-        this->get();
+    for (unsigned char read; *this >> read;) {
+        if (read == 0xFF && JPEGMarker::isRecognizedMarkerByte(this->peek())) {
+            // place back FF
+            this->unget();
+            return;
+        }
     }
 }
 

@@ -6,17 +6,17 @@
 
 class JPEGFrame {
     public:
-        JPEGFrame(JPEGStream& data, std::streampos offset);
+        JPEGFrame(JPEGStream& stream, std::streampos offset);
         struct {
-            unsigned char precision;
-            unsigned short height;
-            unsigned short width;
-            unsigned char component_count;
+            byte precision;
+            word height;
+            word width;
+            byte component_count;
         } header;
         typedef struct {
-            unsigned char h_sampling;
-            unsigned char v_sampling;
-            unsigned char q_table;
+            nybble h_sampling;
+            nybble v_sampling;
+            byte q_table;
         } FrameComponent;
         std::vector<FrameComponent> components;
 };

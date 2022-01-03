@@ -1,20 +1,19 @@
-#include "frame.h"
-#include "bitstream.h"
 #include <iostream>
+#include "frame.h"
 
-JPEGFrame::JPEGFrame(JPEGStream& data, std::streampos offset) {
-    data.seekg(offset);
-    JPEGBitstream&& stream {std::move(data)};
-    unsigned short length = stream.getWord();
+JPEGFrame::JPEGFrame(JPEGStream& stream, std::streampos offset) {
+    stream.seekg(offset);
+    word length = stream.getWord();
     header.precision = stream.getByte();
     header.height = stream.getWord();
     header.width = stream.getWord();
     header.component_count = stream.getByte();
-    for (int i = 0; i < header.component_count; i++) {
-        unsigned char id = stream.getByte();
+    for (auto i = 0; i < header.component_count.to_ulong(); i++) {
+        byte id = stream.getByte();
         FrameComponent c;
-        c.h_sampling = stream.getNibble();
-        c.v_sampling = stream.getNibble();
+        const auto [hs, vs] = stream.getNybblePair();
+        c.h_sampling = hs;
+        c.v_sampling = vs;
         c.q_table = stream.getByte();
         components.push_back(c);
     }

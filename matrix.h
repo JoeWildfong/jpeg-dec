@@ -1,7 +1,6 @@
 #pragma once
 
 #include <array>
-#include <fstream>
 #include "stream.h"
 
 class Matrix8x8 {
@@ -14,5 +13,5 @@ class Matrix8x8 {
         void zigzag();
         static Matrix8x8 unzigzag(Matrix8x8& mat);
         void unzigzag();
-        std::array<unsigned char, 64> values;
+        std::array<byte, 64> values;
 };

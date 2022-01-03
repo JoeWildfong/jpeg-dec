@@ -53,7 +53,7 @@ const JPEGMarkerByte JPEGMarker::getMarkerByte() const {
     return m_byte;
 }
 
-const std::string& JPEGMarker::getName() const {
+const std::string_view JPEGMarker::getName() const {
     return m_name;
 }
 
@@ -66,7 +66,7 @@ bool JPEGMarker::operator<(const JPEGMarker& other) const {
     return this->getMarkerByte() < other.getMarkerByte();
 }
 
-bool JPEGMarker::operator=(const JPEGMarker& other) const {
+bool JPEGMarker::operator==(const JPEGMarker& other) const {
     return this->getMarkerByte() == other.getMarkerByte();
 }
 
