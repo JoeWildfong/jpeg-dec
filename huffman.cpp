@@ -1,8 +1,8 @@
 #include "huffman.h"
-#include "bitstream.h"
+
 #include <iostream>
 
-HuffmanTables::HuffmanTables() : number(0) {}
+HuffmanTables::HuffmanTables() {}
 
 void HuffmanTables::addTable(JPEGStream& stream, std::streampos offset) {
     stream.clear();
@@ -10,7 +10,7 @@ void HuffmanTables::addTable(JPEGStream& stream, std::streampos offset) {
     word len = stream.getWord();
     byte tableId = stream.getByte();
     HuffmanTable& table = getTable(tableId);
-    int code = 0;
+    unsigned int code = 0;
     unsigned char numElements[16];
     for (auto i = 0; i < 16; i++) {
         numElements[i] = stream.get();
