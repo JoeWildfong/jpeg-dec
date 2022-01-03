@@ -1,8 +1,7 @@
 #pragma once
 
-#include <string_view>
-#include <fstream>
 #include <exception>
+#include <string_view>
 
 enum JPEGMarkerByte {
     SOI  = 0xD8,
@@ -54,7 +53,6 @@ class JPEGMarker {
         static const bool isRecognizedMarkerByte(const unsigned char byte);
     private:
         const JPEGMarkerByte m_byte;
-        const std::string_view m_name;
 };
 
 class UnknownMarkerException : std::exception {
