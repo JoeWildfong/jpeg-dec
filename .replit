@@ -1,2 +1,0 @@
-language = "cpp"
-run = "clang++ -std=c++17 *.cpp -o main && echo 'compiled' && ./main"

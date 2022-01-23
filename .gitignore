@@ -1,2 +1,6 @@
-# ignore built binary
+# built binary
 main
+
+# editor settings
+.vscode
+.replit
