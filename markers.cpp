@@ -38,10 +38,10 @@ static const std::unordered_map<JPEGMarkerByte, std::string> markerByteToName {
     {JPEGMarkerByte::COM,  "COM" },
 };
 
-JPEGMarker::JPEGMarker(unsigned char byte) :
+JPEGMarker::JPEGMarker(const u8 byte) :
     JPEGMarker(static_cast<JPEGMarkerByte>(byte)) {}
 
-JPEGMarker::JPEGMarker(JPEGMarkerByte byte) : m_byte(byte) {
+JPEGMarker::JPEGMarker(const JPEGMarkerByte byte) : m_byte(byte) {
     if (markerByteToName.count(byte) == 0) {
         throw new UnknownMarkerException(byte);
     }
@@ -55,8 +55,12 @@ const std::string_view JPEGMarker::getName() const {
     return markerByteToName.at(m_byte);
 }
 
-const bool JPEGMarker::isRecognizedMarkerByte(const unsigned char byte) {
-    const JPEGMarkerByte markerByte = static_cast<JPEGMarkerByte>(byte);
+const bool JPEGMarker::isRecognizedMarkerByte(const u8 byte) {
+    return isRecognizedMarkerByte(static_cast<JPEGMarkerByte>(byte));
+}
+
+const bool JPEGMarker::isRecognizedMarkerByte(const JPEGMarkerByte byte) {
+    const JPEGMarkerByte markerByte = byte;
     return markerByteToName.count(markerByte) > 0;
 }
 
@@ -73,5 +77,5 @@ bool JPEGMarker::operator>(const JPEGMarker& other) const {
 }
 
 
-UnknownMarkerException::UnknownMarkerException(unsigned char marker) :
+UnknownMarkerException::UnknownMarkerException(const JPEGMarkerByte marker) :
     marker(marker) {};

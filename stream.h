@@ -10,10 +10,10 @@
 
 class JPEGStream : public std::ifstream {
     public:
-        const std::pair<nybble, nybble> getNybblePair();
-        const byte getByte();
-        const word getWord();
-        const doubleword getDoubleWord();
+        const std::pair<u4, u4> get4Pair();
+        const u8 get8();
+        const u16 get16();
+        const u32 get32();
         const JPEGMarker getMarker();
         const std::string_view getHex();
         const bool atMarker();

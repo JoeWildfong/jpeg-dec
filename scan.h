@@ -8,12 +8,12 @@ class JPEGScan {
     public:
         JPEGScan(JPEGStream& stream, const std::streampos offset);
         typedef struct {
-            nybble dcTable;
-            nybble acTable;
+            u4 dcTable;
+            u4 acTable;
         } ScanComponent;
         std::vector<ScanComponent> components;
-        byte ss;
-        byte se;
-        nybble ah;
-        nybble al;
+        u8 ss;
+        u8 se;
+        u4 ah;
+        u4 al;
 };

@@ -7,26 +7,26 @@ HuffmanTables::HuffmanTables() {}
 void HuffmanTables::addTable(JPEGStream& stream, std::streampos offset) {
     stream.clear();
     stream.seekg(offset);
-    word len = stream.getWord();
-    byte tableId = stream.getByte();
+    u16 len = stream.get16();
+    u8 tableId = stream.get8();
     HuffmanTable& table = getTable(tableId);
-    unsigned int code = 0;
-    unsigned char numElements[16];
+    u32 code = 0;
+    u8 numElements[16];
     for (auto i = 0; i < 16; i++) {
-        numElements[i] = stream.get();
+        numElements[i] = stream.get8();
     }
     for (auto i = 0; i < 16; i++) {
         for (auto j = 0; j < numElements[i]; j++) {
-            table[HuffmanKey(i + 1, code)] = stream.getByte();
+            table[HuffmanKey(i + 1, code)] = stream.get8();
             code++;
         }
         code <<= 1;
     }
 }
 
-HuffmanTables::HuffmanTable& HuffmanTables::getTable(byte byteId) {
-    nybble tableType = (byteId.to_ulong() >> 4) & 0x0F;
-    nybble tableId = byteId.to_ulong() & 0x0F;
+HuffmanTables::HuffmanTable& HuffmanTables::getTable(u8 byteId) {
+    u4 tableType = (byteId >> 4) & 0x0F;
+    u4 tableId = byteId & 0x0F;
     std::array<HuffmanTable, 4>& tableList = (tableType == 0? dcTables: acTables);
-    return tableList[tableId.to_ulong()];
+    return tableList[tableId];
 }

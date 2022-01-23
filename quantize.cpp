@@ -4,7 +4,7 @@
 QuantizationTables::QuantizationTables(JPEGStream& stream, const std::streampos offset) {
     stream.seekg(offset);
     tables.empty();
-    word length = stream.getWord();
+    u16 length = stream.get16();
     while (!stream.atMarker()) {
         addTable(stream, stream.tellg());
     }
@@ -12,8 +12,8 @@ QuantizationTables::QuantizationTables(JPEGStream& stream, const std::streampos 
 
 void QuantizationTables::addTable(JPEGStream& stream, const std::streampos offset) {
     stream.seekg(offset);
-    const auto [precision, id] = stream.getNybblePair();
+    const auto [precision, id] = stream.get4Pair();
     QTable table {stream, stream.tellg()};
-    tables[id.to_ulong()] = table;
-    defined.set(id.to_ulong());
+    tables[id] = table;
+    defined.set(id);
 }

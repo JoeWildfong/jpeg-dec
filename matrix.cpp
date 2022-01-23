@@ -1,6 +1,6 @@
 #include "matrix.h"
 
-static constexpr unsigned char zigzagMap[] {
+static constexpr u8 zigzagMap[] {
     0,  1,  5,  6,  14, 15, 27, 28,
     2,  4,  7,  13, 16, 26, 29, 42,
     3,  8,  12, 17, 25, 30, 41, 43,
@@ -30,7 +30,7 @@ Matrix8x8::Matrix8x8(JPEGStream& stream, const std::streampos offset) {
 Matrix8x8 Matrix8x8::operator*(Matrix8x8& mat) {
     Matrix8x8 out;
     for (int i = 0; i < 64; i++) {
-        out.values[i] = values[i].to_ulong() * mat.values[i].to_ulong();
+        out.values[i] = values[i] * mat.values[i];
     }
     return out;
 }
@@ -44,7 +44,7 @@ Matrix8x8 Matrix8x8::zigzag(Matrix8x8& mat) {
 }
 
 void Matrix8x8::zigzag() {
-    byte unmodified[64];
+    u8 unmodified[64];
     std::copy(this->values.begin(), this->values.end(), unmodified);
     for (int i = 0; i < 64; i++) {
         this->values[i] = unmodified[zigzagMap[i]];
@@ -60,7 +60,7 @@ Matrix8x8 Matrix8x8::unzigzag(Matrix8x8& mat) {
 }
 
 void Matrix8x8::unzigzag() {
-    byte unmodified[64];
+    u8 unmodified[64];
     std::copy(this->values.begin(), this->values.end(), unmodified);
     for (int i = 0; i < 64; i++) {
         this->values[zigzagMap[i]] = unmodified[i];

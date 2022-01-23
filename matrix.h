@@ -13,5 +13,5 @@ class Matrix8x8 {
         void zigzag();
         static Matrix8x8 unzigzag(Matrix8x8& mat);
         void unzigzag();
-        std::array<byte, 64> values;
+        std::array<u8, 64> values;
 };

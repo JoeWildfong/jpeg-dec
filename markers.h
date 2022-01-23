@@ -3,7 +3,9 @@
 #include <exception>
 #include <string_view>
 
-enum JPEGMarkerByte {
+#include "types.h"
+
+enum class JPEGMarkerByte {
     SOI  = 0xD8,
     EOI  = 0xD9,
     SOF0 = 0xC0,
@@ -41,8 +43,8 @@ enum JPEGMarkerByte {
 
 class JPEGMarker {
     public:
-        JPEGMarker(unsigned char byte);
-        JPEGMarker(JPEGMarkerByte byte);
+        JPEGMarker(const u8 byte);
+        JPEGMarker(const JPEGMarkerByte byte);
 
         const JPEGMarkerByte getMarkerByte() const;
         const std::string_view getName() const;
@@ -50,13 +52,14 @@ class JPEGMarker {
         bool operator==(const JPEGMarker& other) const;
         bool operator>(const JPEGMarker& other) const;
 
-        static const bool isRecognizedMarkerByte(const unsigned char byte);
+        static const bool isRecognizedMarkerByte(const u8 byte);
+        static const bool isRecognizedMarkerByte(const JPEGMarkerByte byte);
     private:
         const JPEGMarkerByte m_byte;
 };
 
 class UnknownMarkerException : std::exception {
     public:
-        UnknownMarkerException(unsigned char marker);
-        const unsigned char marker;
+        UnknownMarkerException(const JPEGMarkerByte marker);
+        const JPEGMarkerByte marker;
 };

@@ -4,17 +4,17 @@
 
 JPEGScan::JPEGScan(JPEGStream& stream, const std::streampos offset) {
     stream.seekg(offset);
-    word length = stream.getWord();
-    byte numComponents = stream.getByte();
-    for (int i = 0; i < numComponents.to_ulong(); i++) {
-        byte id = stream.getByte();
+    u16 length = stream.get16();
+    u8 numComponents = stream.get8();
+    for (int i = 0; i < numComponents; i++) {
+        u8 id = stream.get8();
         ScanComponent c;
-        const auto [dcTable, acTable] = stream.getNybblePair();
+        const auto [dcTable, acTable] = stream.get4Pair();
         c.dcTable = dcTable;
         c.acTable = acTable;
         components.push_back(c);
     }
-    ss = stream.getByte();
-    se = stream.getByte();
-    auto [ah, al] = stream.getNybblePair();
+    ss = stream.get8();
+    se = stream.get8();
+    auto [ah, al] = stream.get4Pair();
 }

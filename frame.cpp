@@ -3,18 +3,19 @@
 
 JPEGFrame::JPEGFrame(JPEGStream& stream, std::streampos offset) {
     stream.seekg(offset);
-    word length = stream.getWord();
-    header.precision = stream.getByte();
-    header.height = stream.getWord();
-    header.width = stream.getWord();
-    header.component_count = stream.getByte();
-    for (auto i = 0; i < header.component_count.to_ulong(); i++) {
-        byte id = stream.getByte();
+    u16 length = stream.get16();
+    precision = stream.get8();
+    height = stream.get16();
+    width = stream.get16();
+    u8 component_count = stream.get8();
+    std::cout << component_count << std::endl;
+    for (auto i = 0; i < component_count; i++) {
+        u8 id = stream.get8();
         FrameComponent c;
-        const auto [hs, vs] = stream.getNybblePair();
+        const auto [hs, vs] = stream.get4Pair();
         c.h_sampling = hs;
         c.v_sampling = vs;
-        c.q_table = stream.getByte();
+        c.q_table = stream.get8();
         components.push_back(c);
     }
 }

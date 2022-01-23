@@ -1,8 +1,8 @@
 #pragma once
 
-#include <bitset>
+#include <cstdint>
 
-using nybble     = std::bitset<4>;
-using byte       = std::bitset<8>;
-using word       = std::bitset<16>;
-using doubleword = std::bitset<32>;
+using u4  = std::uint8_t;
+using u8  = std::uint8_t;
+using u16 = std::uint16_t;
+using u32 = std::uint32_t;

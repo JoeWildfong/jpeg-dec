@@ -2,21 +2,19 @@
 
 #include <vector>
 
+#include "types.h"
 #include "stream.h"
 
 class JPEGFrame {
     public:
         JPEGFrame(JPEGStream& stream, std::streampos offset);
-        struct {
-            byte precision;
-            word height;
-            word width;
-            byte component_count;
-        } header;
+        u8 precision;
+        u16 height;
+        u16 width;
         typedef struct {
-            nybble h_sampling;
-            nybble v_sampling;
-            byte q_table;
+            u4 h_sampling;
+            u4 v_sampling;
+            u8 q_table;
         } FrameComponent;
         std::vector<FrameComponent> components;
 };
