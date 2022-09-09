@@ -21,7 +21,7 @@ const std::vector<std::streampos>& JPEG::Skeleton::getTags(JPEGMarkerByte byte) 
     return tags.at(JPEGMarker(byte));
 }
 
-const std::string_view JPEG::Skeleton::toString() const {
+const std::string JPEG::Skeleton::toString() const {
     std::ostringstream out;
     for (auto tagType = tags.begin(); tagType != tags.end(); tagType++) {
         auto tagName = tagType->first.getName();

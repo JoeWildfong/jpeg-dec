@@ -3,7 +3,6 @@
 
 QuantizationTables::QuantizationTables(JPEGStream& stream, const std::streampos offset) {
     stream.seekg(offset);
-    tables.empty();
     u16 length = stream.get16();
     while (!stream.atMarker()) {
         addTable(stream, stream.tellg());

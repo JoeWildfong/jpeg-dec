@@ -12,7 +12,7 @@ class Skeleton {
     public:
         Skeleton(JPEGStream& data);
         const std::vector<std::streampos>& getTags(const JPEGMarkerByte byte) const;
-        const std::string_view toString() const;
+        const std::string toString() const;
     private:
         std::map<const JPEGMarker, std::vector<std::streampos>> tags;
 };

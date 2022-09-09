@@ -11,15 +11,12 @@ static constexpr u8 zigzagMap[] {
     35, 36, 48, 49, 57, 58, 62, 63
 };
 
-Matrix8x8::Matrix8x8() {
-    values.empty();
-}
+Matrix8x8::Matrix8x8() {}
 
 Matrix8x8::Matrix8x8(JPEGStream& stream, const std::streampos offset) {
     stream.seekg(offset);
-    values.empty();
     for (int i = 0; i < 64; i++) {
-        unsigned char next = stream.get();
+        u8 next = stream.get8();
         if (stream.eof()) {
             return;
         }

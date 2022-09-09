@@ -2,6 +2,7 @@
 
 #include <array>
 #include "stream.h"
+#include "types.h"
 
 class Matrix8x8 {
     public:
