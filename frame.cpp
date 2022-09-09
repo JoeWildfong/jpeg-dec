@@ -8,7 +8,7 @@ JPEGFrame::JPEGFrame(JPEGStream& stream, std::streampos offset) {
     height = stream.get16();
     width = stream.get16();
     u8 component_count = stream.get8();
-    std::cout << "number of frame components: " << (int) component_count << std::endl;
+    std::cout << "number of frame components: " << +component_count << std::endl;
     for (auto i = 0; i < component_count; i++) {
         u8 id = stream.get8();
         FrameComponent c;

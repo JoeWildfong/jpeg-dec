@@ -9,12 +9,10 @@ JPEGScan::JPEGScan(JPEGStream& stream, const std::streampos offset) {
     for (int i = 0; i < numComponents; i++) {
         u8 id = stream.get8();
         ScanComponent c;
-        const auto [dcTable, acTable] = stream.get4Pair();
-        c.dcTable = dcTable;
-        c.acTable = acTable;
+        std::tie(c.dcTable, c.acTable) = stream.get4Pair();
         components.push_back(c);
     }
     ss = stream.get8();
     se = stream.get8();
-    auto [ah, al] = stream.get4Pair();
+    std::tie(ah, al) = stream.get4Pair();
 }

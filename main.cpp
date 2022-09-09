@@ -40,7 +40,7 @@ int main() {
 
     QuantizationTables qtables {inFile, skeleton->getTags(JPEGMarkerByte::DQT)[0]};
     for (int i = 0; i < 4; i++) {
-        std::cout << "qtable " << i <<": " << (qtables.defined[i]? "defined":"undefined") << std::endl;
+        std::cout << "qtable " << i << ": " << (qtables.defined[i]? "defined" : "undefined") << std::endl;
     }
 
     JPEGFrame frame {inFile, skeleton->getTags(JPEGMarkerByte::SOF0)[0]};

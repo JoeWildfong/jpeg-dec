@@ -7,7 +7,7 @@ HuffmanTables::HuffmanTables() {}
 void HuffmanTables::addTable(JPEGStream& stream, std::streampos offset) {
     stream.clear();
     stream.seekg(offset);
-    u16 len = stream.get16();
+    u16 length = stream.get16();
     u8 tableId = stream.get8();
     HuffmanTable& table = getTable(tableId);
     u32 code = 0;
