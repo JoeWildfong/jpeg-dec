@@ -1,5 +1,6 @@
-# built binary
+# build artifacts
 main
+build
 
 # editor settings
 .vscode
