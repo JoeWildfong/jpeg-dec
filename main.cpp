@@ -11,12 +11,14 @@
 
 
 int main() {
-    JPEGStream inFile;
-    inFile.open("input.jpg", std::ios::binary);
-    if (!inFile.is_open()) {
+    std::ifstream file;
+    file.open("input.jpg", std::ios::binary);
+    if (!file.is_open()) {
         std::cout << "Unable to open input.jpg" << std::endl;
         return 1;
     }
+
+    JPEGStream inFile {std::move(file)};
     
     auto skeleton = std::make_unique<JPEG::Skeleton>(inFile);
 

@@ -1,59 +1,80 @@
 #include "stream.h"
 
 const std::pair<u4, u4> JPEGStream::get4Pair() {
-    const u8 read = this->get();
+    const u8 read = m_stream.get();
     return {(read >> 4) & 0x0F, read & 0x0F};
 }
 
 const u8 JPEGStream::get8() {
-    return this->get();
+    return m_stream.get();
 }
 
 const u16 JPEGStream::get16() {
-    return (this->get() << 8) + this->get();
+    return (m_stream.get() << 8) + m_stream.get();
 }
 
 const u32 JPEGStream::get32() {
-    return (this->get() << 24) + (this->get() << 16) + (this->get() << 8) + this->get();
+    return (m_stream.get() << 24) + (m_stream.get() << 16) + (m_stream.get() << 8) + m_stream.get();
 }
 
 const JPEGMarker JPEGStream::getMarker() {
-    const u8 ffbyte = this->get();
+    const u8 ffbyte = m_stream.get();
     if (ffbyte != 0xFF) {
-        throw NotAMarkerException(this->tellg());
+        throw NotAMarkerException(m_stream.tellg());
     }
-    const u8 markerByte = this->get();
+    const u8 markerByte = m_stream.get();
     return std::move(JPEGMarker{markerByte});
 }
 
 const std::string_view JPEGStream::getHex() {
     char byteHex[2];
-    sprintf(byteHex, "%x", this->get());
+    sprintf(byteHex, "%x", m_stream.get());
     return std::string_view(byteHex);
 }
 
 const bool JPEGStream::atMarker() {
     bool out;
-    const std::streampos startPos = this->tellg();
-    const u8 ffbyte = this->get();
+    const std::streampos startPos = m_stream.tellg();
+    const u8 ffbyte = m_stream.get();
     if (ffbyte != 0xFF) {
         out = false;
     } else {
-        const u8 markerByte = this->get();
+        const u8 markerByte = m_stream.get();
         out = JPEGMarker::isRecognizedMarkerByte(markerByte);
     }
-    this->seekg(startPos);
+    m_stream.seekg(startPos);
     return out;
 }
 
 void JPEGStream::skipToMarker() {
-    for (u8 read; *this >> read;) {
-        if (read == 0xFF && JPEGMarker::isRecognizedMarkerByte(this->peek())) {
+    for (u8 read; m_stream >> read;) {
+        if (read == 0xFF && JPEGMarker::isRecognizedMarkerByte(m_stream.peek())) {
             // place back FF
-            this->unget();
+            m_stream.unget();
             return;
         }
     }
+}
+
+void JPEGStream::clear() {
+    m_stream.clear();
+}
+
+bool JPEGStream::eof() {
+    return m_stream.eof();
+}
+
+JPEGStream& JPEGStream::seekg(std::streampos pos) {
+    m_stream.seekg(pos);
+    return *this;
+}
+
+std::streampos JPEGStream::tellg() {
+    return m_stream.tellg();
+}
+
+void JPEGStream::close() {
+    m_stream.close();
 }
 
 NotAMarkerException::NotAMarkerException(const std::streampos pos) : pos(pos) {}

@@ -8,7 +8,7 @@
 #include "types.h"
 #include "markers.h"
 
-class JPEGStream : public std::ifstream {
+class JPEGStream {
     public:
         const std::pair<u4, u4> get4Pair();
         const u8 get8();
@@ -18,9 +18,13 @@ class JPEGStream : public std::ifstream {
         const std::string_view getHex();
         const bool atMarker();
         void skipToMarker();
+        void clear();
+        bool eof();
+        JPEGStream& seekg(std::streampos pos);
+        std::streampos tellg();
+        void close();
         
-        using std::ifstream::ifstream;
-        JPEGStream(std::ifstream&& stream) : std::ifstream(std::move(stream)) {};
+        JPEGStream(std::ifstream&& stream) : m_stream(std::move(stream)) {};
 
         ~JPEGStream() = default;
 
@@ -29,6 +33,9 @@ class JPEGStream : public std::ifstream {
         
         JPEGStream& operator=(const JPEGStream& copy) = delete;
         JPEGStream& operator=(JPEGStream&& move) = default;
+
+    private:
+        std::ifstream m_stream;
 };
 
 class NotAMarkerException : std::exception {
