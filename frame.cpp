@@ -3,6 +3,7 @@
 
 JPEGFrame::JPEGFrame(JPEGStream& stream, std::streampos offset) {
     stream.seekg(offset);
+    stream.resetByteCounter();
     u16 length = stream.get16();
     precision = stream.get8();
     height = stream.get16();
@@ -17,5 +18,8 @@ JPEGFrame::JPEGFrame(JPEGStream& stream, std::streampos offset) {
         c.v_sampling = vs;
         c.q_table = stream.get8();
         components.push_back(c);
+    }
+    if (stream.getByteCounter() != length) {
+        std::cerr << "Warning: improper SOF frame length" << std::endl;
     }
 }

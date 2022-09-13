@@ -7,6 +7,7 @@ HuffmanTables::HuffmanTables() {}
 void HuffmanTables::addTable(JPEGStream& stream, std::streampos offset) {
     stream.clear();
     stream.seekg(offset);
+    stream.resetByteCounter();
     u16 length = stream.get16();
     u8 tableId = stream.get8();
     HuffmanTable& table = getTable(tableId);
@@ -21,6 +22,9 @@ void HuffmanTables::addTable(JPEGStream& stream, std::streampos offset) {
             code++;
         }
         code <<= 1;
+    }
+    if (stream.getByteCounter() != length) {
+        std::cerr << "Warning: improper DHT frame length" << std::endl;
     }
 }
 

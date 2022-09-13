@@ -18,6 +18,8 @@ class JPEGStream {
         const std::string_view getHex();
         const bool atMarker();
         void skipToMarker();
+        unsigned int getByteCounter();
+        void resetByteCounter();
         void clear();
         bool eof();
         JPEGStream& seekg(std::streampos pos);
@@ -36,6 +38,7 @@ class JPEGStream {
 
     private:
         std::ifstream m_stream;
+        unsigned int m_byteCounter = 0;
 };
 
 class NotAMarkerException : std::exception {

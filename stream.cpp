@@ -1,19 +1,23 @@
 #include "stream.h"
 
 const std::pair<u4, u4> JPEGStream::get4Pair() {
+    m_byteCounter++;
     const u8 read = m_stream.get();
     return {(read >> 4) & 0x0F, read & 0x0F};
 }
 
 const u8 JPEGStream::get8() {
+    m_byteCounter++;
     return m_stream.get();
 }
 
 const u16 JPEGStream::get16() {
+    m_byteCounter += 2;
     return (m_stream.get() << 8) + m_stream.get();
 }
 
 const u32 JPEGStream::get32() {
+    m_byteCounter += 4;
     return (m_stream.get() << 24) + (m_stream.get() << 16) + (m_stream.get() << 8) + m_stream.get();
 }
 
@@ -54,6 +58,14 @@ void JPEGStream::skipToMarker() {
             return;
         }
     }
+}
+
+unsigned int JPEGStream::getByteCounter() {
+    return m_byteCounter;
+}
+
+void JPEGStream::resetByteCounter() {
+    m_byteCounter = 0;
 }
 
 void JPEGStream::clear() {
