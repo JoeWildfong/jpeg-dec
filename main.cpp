@@ -10,9 +10,14 @@
 #include "scan.h"
 
 
-int main() {
+int main(int argc, char *argv[]) {
     std::ifstream file;
-    file.open("input.jpg", std::ios::binary);
+    std::string filename = "input.jpg";
+    if (argc >= 2) {
+        filename = argv[1];
+    }
+    std::cout << "JPEG File " << filename << ":" << std::endl;
+    file.open(filename, std::ios::binary);
     if (!file.is_open()) {
         std::cout << "Unable to open input.jpg" << std::endl;
         return 1;
