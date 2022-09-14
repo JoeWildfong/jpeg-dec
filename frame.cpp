@@ -9,7 +9,7 @@ JPEGFrame::JPEGFrame(JPEGStream& stream, std::streampos offset) {
     height = stream.get16();
     width = stream.get16();
     u8 component_count = stream.get8();
-    std::cout << "number of frame components: " << +component_count << std::endl;
+    std::cout << "number of frame components: " << +component_count << '\n';
     for (auto i = 0; i < component_count; i++) {
         u8 id = stream.get8();
         FrameComponent c;
@@ -20,6 +20,6 @@ JPEGFrame::JPEGFrame(JPEGStream& stream, std::streampos offset) {
         components.push_back(c);
     }
     if (stream.getByteCounter() != length) {
-        std::cerr << "Warning: improper SOF frame length" << std::endl;
+        std::cerr << "Warning: improper SOF frame length\n";
     }
 }

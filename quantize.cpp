@@ -9,7 +9,7 @@ QuantizationTables::QuantizationTables(JPEGStream& stream, const std::streampos 
         addTable(stream, stream.tellg());
     }
     if (stream.getByteCounter() != length) {
-        std::cerr << "Warning: improper DQT frame length" << std::endl;
+        std::cerr << "Warning: improper DQT frame length\n";
     }
 }
 

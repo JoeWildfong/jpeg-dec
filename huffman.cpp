@@ -24,7 +24,7 @@ void HuffmanTables::addTable(JPEGStream& stream, std::streampos offset) {
         code <<= 1;
     }
     if (stream.getByteCounter() != length) {
-        std::cerr << "Warning: improper DHT frame length" << std::endl;
+        std::cerr << "Warning: improper DHT frame length\n";
     }
 }
 
