@@ -15,8 +15,8 @@ class JPEGBitstream {
         JPEGBitstream(const JPEGBitstream& copy) = default;
         JPEGBitstream(JPEGBitstream&& move) = default;
         
-        JPEGBitstream& operator=(const JPEGBitstream& copy) = default;
-        JPEGBitstream& operator=(JPEGBitstream&& move) = default;
+        JPEGBitstream& operator=(const JPEGBitstream& copy) = delete;
+        JPEGBitstream& operator=(JPEGBitstream&& move) = delete;
     private:
         JPEGStream& m_source;
         void readIntoBuffer(unsigned int len);
